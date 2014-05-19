@@ -67,7 +67,7 @@ class Call(Event):
 
 
   def GetTypedName(self):
-    return (str(self.name), [self.retaddr[0],self.retvalue[0]]+list(self.param_ptypes))
+    return (str(self.name), [self.retaddr[0],self.retvalue[1]]+list(self.param_values))
 
 class Signal(Event):
   def __init__(self, name, process, mm): #_sifields = None):

@@ -59,50 +59,7 @@ class Printer:
     else:
       print "Invalid fiter:", filter_str
   
-  def split_events(self, events):
-    r = dict()
-    
-    for event in events:
-      if isinstance(event, Call): #or isinstance(event, Crash):
-        mod = event.module
-        #else:
-        #  mod = self.pname
-        #print mod 
-        if mod is not None:
-          if mod in r:
-            r[mod] = r[mod] + [event]
-          else:
-            r[mod] = [event]
-      
-
-    return r
-
-  def merge_events(self, events):
-     r = dict()
-     r[self.pname] = events
-     return r
-  
-  def print_events(self, delta, events, mode):
-    if mode == "split": 
-      r = self.split_events(events)
-    elif mode == "merge":
-      r = self.merge_events(events)
-    
-    for mod,evs in r.items():
-      #print mod, evs
-      self.__print_events(mod,delta,evs)
-  
-
-  def set_original_events(self, events):
-    r = list()
-
-    for event in events:
-      r = r + list(self.preprocess(event))
-    
-    self.original_events = r
- 
-
-  def print_data(self, module, delta, events):
+  def print_events(self, module, events):
      
     r = list()
 
@@ -110,19 +67,10 @@ class Printer:
       r = r + list(self.preprocess(event))
     
     events = r
-
-    x = hash(tuple(events))
-    if (x in self.tests):
-      return
- 
-    if not (self.filters == [] or any(map(lambda f: f in events,self.filters))):
-      delta.Invert()
-
-    self.tests.add(x)
-    print module+"\t"+str(delta)+"\t", 
+     
     for x,y in events:
       #x,y = event
-      print x+"="+y+" ",
+      print x+"="+y
       #assert(not ("abort" in str(x)))  
 
     print "\n",

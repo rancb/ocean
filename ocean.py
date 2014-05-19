@@ -44,7 +44,7 @@ if __name__ == "__main__":
     # Arguments
     parser = argparse.ArgumentParser(description='xxx')
     parser.add_argument("testcase", help="Testcase to use", type=str, default=None)
-    parser.add_argument("mode", help="Print mode to use", type=str, default="split")
+    #parser.add_argument("mode", help="Print mode to use", type=str, default="split")
     #
     #parser.add_argument("outdir", help="Output directory to use", type=str, default=".")
     parser.add_argument("--show-stdout",
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     options = parser.parse_args()
     
     testcase = options.testcase
-    print_mode = options.mode
+    #print_mode = options.mode
     filters = options.filter_by
     incmodfile = options.inc_mods
     ignmodfile = options.ign_mods
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     classes['crashed:eip'] = 'B'
     classes['*'] = 'R'
 
-    prt = DataPrinter("/dev/stdout", program, classes)
+    prt = Printer("/dev/stdout", program)
     #map(prt.filter_by, filters)
 
     # unchanged input
@@ -124,16 +124,5 @@ if __name__ == "__main__":
         print "Execution of",program,"failed!"
         exit(-1)
 
-    prt.set_original_events(original_events)
-    #prt.print_events("o", original_events, print_mode)
-    #assert(0)
-
-    for (i, (d, mutated)) in enumerate(crazy_inputs):
-      if app.timeouted():
-        sys.exit(-1)
-
-      if i >= max_mut:
-        break
-
-      events = app.getData(mutated)
-      prt.print_events(d, events)
+    #prt.set_original_events(original_events)
+    prt.print_events(program, original_events)

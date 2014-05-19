@@ -55,10 +55,10 @@ class Process(Application):
         self.binfo = dict()
 
     def setBreakpoints(self, elf):
-      for func_name in elf.GetFunctions():
-        if func_name in specs:
+      for func_name,_ in specs.items():
           #print elf.GetModname(), func_name, hex(elf.FindFuncInPlt(func_name))
-          addr = elf.FindFuncInPlt(func_name)
+          addr = int(func_name,16)
+          #print hex(addr)
           self.binfo[addr] = elf.GetModname(),func_name
           self.breakpoint(addr)
 
@@ -93,22 +93,22 @@ class Process(Application):
 
                   #print self.mm
 
-                  for (range, mod, atts) in self.mm.items():
-                     if '/' in mod and 'x' in atts and not ("libc-" in mod):
+                  #for (range, mod, atts) in self.mm.items():
+                  #   if '/' in mod and 'x' in atts and not ("libc-" in mod):
                   
-                        if mod == self.elf.path:
-                           base = 0
-                        else:
-                           base = range[0]
+                  #      if mod == self.elf.path:
+                  #         base = 0
+                  #      else:
+                  #         base = range[0]
                         
-                        if self.included_mods == [] or any(map(lambda l: l in mod, self.included_mods)):
-                          if self.ignored_mods == [] or not (any(map(lambda l: l in mod, self.ignored_mods))):
+                  #      if self.included_mods == [] or any(map(lambda l: l in mod, self.included_mods)):
+                  #        if self.ignored_mods == [] or not (any(map(lambda l: l in mod, self.ignored_mods))):
                             
-                            if not (mod in self.modules):
-                              self.modules[mod] = ELF(mod, base = base)
+                  #          if not (mod in self.modules):
+                  #            self.modules[mod] = ELF(mod, base = base)
                             #print "hooking", mod, hex(base)
 
-                            self.setBreakpoints(self.modules[mod])
+                  self.setBreakpoints(self.elf)
 
             
                   return []
@@ -128,6 +128,7 @@ class Process(Application):
                   return []
 
                 else:
+                  #print name, module
                   call = Call(name, module) 
                   self.mm.update()
                   call.DetectParams(self.process, self.mm)
